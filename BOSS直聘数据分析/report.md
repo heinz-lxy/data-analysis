@@ -1,14 +1,16 @@
-# BOSS直聘"数据分析"岗位分析
-
 # 0准备
 [browser.py](https://github.com/heinz-lxy/selenium-tools)
 对selenium模拟浏览器进行封装
 
-[database.py](https://github.com/heinz-lxy/python-modules/blob/master/database.py) 对pymysql进行封装，并提供了sql语句模板
+[database.py](https://github.com/heinz-lxy/python-modules/blob/master/database.py) 对pymysql进行封装，并提供了sql语句模
 
 [excel.py](https://github.com/heinz-lxy/python-modules/blob/master/excel.py) 基于pandas进行封装，使用继承了DataFrame的Table类进行表格操作
 
 
+        class ZhipinCrawler(IterateCrawler): 
+        '''继承浏览器迭代操作类,完成boss直聘数据爬取'''
+            def __ini
+        
 # 1获取数据
 由于数据量不大，这里使用模拟浏览器方法进行爬取
 IterateBrowser类定义了浏览器翻页行为，在此基础上实现数据提取和数据库写入操作就基本完成了
@@ -105,7 +107,7 @@ IterateBrowser类定义了浏览器翻页行为，在此基础上实现数据提
 
 处理完成后的效果：
 
-![](data\2数据处理\1.jpg)
+![](data/2数据处理/1.jpg)
 
 ## 2.2位置信息处理
 
@@ -143,7 +145,7 @@ IterateBrowser类定义了浏览器翻页行为，在此基础上实现数据提
 ![](data\3数据分析\2行业分布\2.jpg)
 
 ## 3.4经验分布
-![](data\3数据分析\4经验分布\2.jpg)
+![](data/3数据分析/4经验分布/2.jpg)
 
 对比5-10年，3-5年，1-3年，及（1年以内+经验不限+应届生),可以看到对于新人的需求增量正在减少
 ## 3.4招聘研究
