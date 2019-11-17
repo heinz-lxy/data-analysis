@@ -7,6 +7,16 @@
 [excel.py](https://github.com/heinz-lxy/python-modules/blob/master/excel.py) 基于pandas进行封装，使用继承了DataFrame的Table类进行表格操作
 
 
+
+不同城市
+
+平均薪酬
+
+数据库 按照城市   hangzhou shanghai beijing
+同时爬取
+
+
+
         class ZhipinCrawler(IterateCrawler): 
         '''继承浏览器迭代操作类,完成boss直聘数据爬取'''
             def __ini
