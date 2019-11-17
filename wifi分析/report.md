@@ -12,6 +12,7 @@
         names = ['time','url','ip1','empty','ip2','delay','ttl','status']
         tb = Table(r'd:\data analysis\dataset\wifi\ping_log.csv',encoding='gbk',names = names )
 这里的Table类继承了pandas的DataFrame类，并封装了read_csv方法，见excel.py[url]
+![](http://q14cwxl8t.bkt.clouddn.com/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20191117154056.jpg)
 
 去除无关列
 
