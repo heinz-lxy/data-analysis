@@ -140,11 +140,10 @@
     a = tb.count_rank('education')
     a = a.reset_index()
     a.pie2().render()
-    print(a.columns)
 ![学历分布](https://github.com/heinz-lxy/data-analysis/blob/master/BOSS%E7%9B%B4%E8%81%98%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/images/91528.jpg?raw=true)
 
 ### 薪酬分布
-[核密度估计]
+![核密度估计](https://github.com/heinz-lxy/data-analysis/blob/master/BOSS%E7%9B%B4%E8%81%98%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/images/58186.jpg?raw=true)
 可见在大部分雇主眼中，10k是低端和高端岗位的一个分水岭
 
 ### 经验薪酬相关性分析
