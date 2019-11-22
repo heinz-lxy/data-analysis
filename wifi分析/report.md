@@ -4,13 +4,16 @@
 
 ### 提出
 1哪些时间段延迟低？
+
 2哪些时间段容易断网？
 
 ## 2数据来源
+![PingInfoView](https://github.com/heinz-lxy/data-analysis/blob/master/wifi%E5%88%86%E6%9E%90/images/81179.jpg?raw=true)
+
 这里使用的是一款PingInfoView的软件，能自动进行ping操作并日志记录，默认格式为csv
 记录时间范围为2019年9月12日-2019年11月18日，间隔为1s,文件总大小为164MB,共计1056926条数据
 
-![ping_log文件概览+属性大小](data\22076.jpg)
+![ping_log文件概览+属性大小](https://github.com/heinz-lxy/data-analysis/blob/master/wifi%E5%88%86%E6%9E%90/images/22076.jpg?raw=true)
 
 ## 3数据处理
 加载数据
@@ -19,15 +22,13 @@
         tb = Table(r'd:\data analysis\dataset\wifi\ping_log.csv',encoding='gbk',names = names )
 这里的Table类继承了pandas的DataFrame类，并封装了read_csv方法，见[excel.py](https://github.com/heinz-lxy/python-modules/blob/master/excel.py) 
 
-![](http://q14cwxl8t.bkt.clouddn.com/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20191117154056.jpg)
-
-![原始数据概览](data\84982.jpg)
+![原始数据概览](http://q14cwxl8t.bkt.clouddn.com/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20191117154056.jpg?raw=true)
 
 去除无关列
 
        tb = tb.get('',['time','delay'])
 
-![去除无关列](data\70559.jpg)
+![去除无关列](https://github.com/heinz-lxy/data-analysis/blob/master/wifi%E5%88%86%E6%9E%90/images/70559.jpg?raw=true)
 
 初步观察数据后发现，delay列中存在数据缺失，不难发现这是丢包情况产生的
 为了保持数据类型一致性，便于后续分析，将丢包情况下的延迟设为1000ms
@@ -58,7 +59,7 @@
         
         tb['hour'] = tb['time'].map(lambda t:t.hour)
 
-![](data\28649.jpg)
+![](https://github.com/heinz-lxy/data-analysis/blob/master/wifi%E5%88%86%E6%9E%90/images/28649.jpg?raw=true)
 
 保存数据，便于后续分析
         
@@ -109,7 +110,7 @@
 
 为了分析延迟的变化情况，按照时间顺序绘制折线图
 
-![各时间段延迟](data\40773.jpg)
+![各时间段延迟](https://github.com/heinz-lxy/data-analysis/blob/master/wifi%E5%88%86%E6%9E%90/images/40773.jpg?raw=true)
 
 可以看到，0点以后延迟有较大增长，在2点左右延迟达到高峰，随后迅速下降
 6点-9点延迟持续下降
@@ -118,7 +119,7 @@
 
         tb = tb.reset_index().sort_values(by='hour',ascending=True).set_index('hour').pct_change()
 
-![网络行为变化率](data\74496.jpg)
+![网络行为变化率](https://github.com/heinz-lxy/data-analysis/blob/master/wifi%E5%88%86%E6%9E%90/images/74496.jpg?raw=true)
 
 可以看到，变化率谷点在凌晨4点，结合常识和统计一般性推断，附近部分人群有在3点-4点入睡的习惯
 
@@ -131,7 +132,7 @@
         tb['delay'] = abs(a['delay'])
         tb.plot().show()
 
-![网络行为波动率](data\69508.jpg)
+![网络行为波动率](https://github.com/heinz-lxy/data-analysis/blob/master/wifi%E5%88%86%E6%9E%90/images/69508.jpg?raw=true)
 
 可以看到，最高峰值为凌晨4点和上午10点，在下午17点和晚上7点-9点有2个峰值，在凌晨2点有1个较明显的峰值，谷点在21点-22点左右
 
