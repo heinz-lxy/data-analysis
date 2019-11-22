@@ -1,0 +1,23 @@
+tb = Table(r'data\hangzhou.pkl')
+tb.dtype('f8',['salary_avg'])
+print(tb.groupby('experience')['salary_avg'].std())
+
+experience
+1-3年      5.837775
+10年以上     0.000000
+1年以内      2.891078
+3-5年      7.427272
+5-10年    10.433352
+应届生       3.570714
+经验不限      9.385806
+
+
+
+a = Table({})
+cities = ['hangzhou','beijing','shanghai','guangzhou','shenzhen']
+for city in cities:
+    tmp  = Table(r'data\%s.pkl'%city)
+    a[city] = tmp['salary_avg']
+a = a.dtype('f8',cities)
+a.boxplot()
+plt.show()

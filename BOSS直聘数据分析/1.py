@@ -2,14 +2,22 @@
 # @Author: de retour
 # @Date:   2019-11-02 12:11:04
 # @Last Modified by:   de retour
-# @Last Modified time: 2019-11-20 09:52:16
+# @Last Modified time: 2019-11-20 23:46:15
 
 from excel import Table 
 import t
+import matplotlib.pyplot as plt 
+
+a = Table({})
+cities = ['hangzhou','beijing','shanghai','guangzhou','shenzhen']
+for city in cities:
+    tmp  = Table(r'data\%s.pkl'%city)
+    a[city] = tmp['salary_avg']
+a = a.dtype('f8',cities)
+a.boxplot()
+plt.show()
 
 
-tb = Table(r'data\hangzhou.pkl')
-tb.save('1.xlsx')
 # tb.filter(tb.district!='不明').count_rank('district')\
 # .reset_index().pie2().render()
 
