@@ -11,7 +11,7 @@
 由于验证码图片尺寸较小，这里使用的是KNN分类算法，将图片的像素值平铺作为特征向量
 
 为了突出问题解决性，降低不必要的复杂度，这里将图片中的字符进行手工分割，得到单个字符
-![字符分割](images\49216.jpg)
+![字符分割](https://github.com/heinz-lxy/data-analysis/blob/master/3.%E9%AA%8C%E8%AF%81%E7%A0%81%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/images/49216.jpg?raw=true)
 
 为了进一步降低复杂度，这里仅选取2、3、4这三个字符进行测试
 
@@ -50,11 +50,11 @@
 
 ## 数据标注
 将图片放入对应数字的文件夹，统一编号。为了保证算法的公平性，训练集中每一类保持数量相同
-![图片分类](images\72041.jpg)
+![图片分类](https://github.com/heinz-lxy/data-analysis/blob/master/3.%E9%AA%8C%E8%AF%81%E7%A0%81%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/images/72041.jpg?raw=true)
 
 由于图片分类后排列有序，标注时只需下拉复制即可
 
-![数据标注](images\30120.jpg)
+![数据标注](https://github.com/heinz-lxy/data-analysis/blob/master/3.%E9%AA%8C%E8%AF%81%E7%A0%81%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/images/30120.jpg?raw=true)
 ## 模型训练
 载入训练集
 
@@ -79,7 +79,7 @@
     plt.legend()
     plt.show()
 
-![邻近数测试](images\12386.png)
+![邻近数测试](https://github.com/heinz-lxy/data-analysis/blob/master/3.%E9%AA%8C%E8%AF%81%E7%A0%81%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/images/12386.png?raw=true)
 
 可以看到，在k=1时，训练集和测试集的准确度都达到最高值，所以将k选定为1
     
@@ -91,7 +91,7 @@
     print(model_knn.predict(test_data))
 
     [4 3 2 2 3 2]
- ![测试集](images\92749.png)
+ ![测试集](https://github.com/heinz-lxy/data-analysis/blob/master/3.%E9%AA%8C%E8%AF%81%E7%A0%81%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/images/92749.png?raw=true)
 
 
 可以看到模型计算的结果和实际基本符合，进一步计算准确率
