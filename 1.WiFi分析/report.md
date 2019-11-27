@@ -1,0 +1,197 @@
+# WiFi分析
+## 1问题
+### 背景
+来到一个新住处，通过WiFi万能钥匙连接了两个免费wifi，然而网络时常不稳定，希望通过数据对时间段进行分析，实现“错峰上网”
+
+### 提出
+1哪些时间段延迟低？
+
+2哪些时间段容易断网？
+
+## 2数据来源
+![PingInfoView](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/81179.jpg?raw=true)
+
+这里使用的是一款PingInfoView的软件，能自动进行ping操作并日志记录，默认格式为csv
+记录时间范围为2019年9月12日-2019年11月18日，间隔为1s,文件总大小为164MB,共计1056926条数据
+
+![ping_log文件概览+属性大小](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/22076.jpg?raw=true)
+
+## 3数据处理
+加载数据
+        
+        names = ['time','url','ip1','empty','ip2','delay','ttl','status']
+        tb = Table(r'd:\data analysis\dataset\wifi\ping_log.csv',encoding='gbk',names = names )
+这里的Table类继承了pandas的DataFrame类，并封装了read_csv方法，见[excel.py](https://github.com/heinz-lxy/python-modules/blob/master/excel.py) 
+
+![原始数据概览](http://q14cwxl8t.bkt.clouddn.com/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20191117154056.jpg?raw=true)
+
+去除无关列
+
+       tb = tb.get('',['time','delay'])
+
+![去除无关列](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/70559.jpg?raw=true)
+
+初步观察数据后发现，delay列中存在数据缺失，不难发现这是丢包情况产生的
+为了保持数据类型一致性，便于后续分析，将丢包情况下的延迟设为1000ms
+
+        tb = tb.get('',['time','delay']).fillna(1000)
+
+将初步处理的数据进行保存，便于后续分析
+        
+        tb.save('data.pkl')
+
+加载数据包
+        
+        tb = Table('data.pkl')
+        print(tb.info())
+
+        RangeIndex: 1056927 entries, 0 to 1056926
+        Data columns (total 2 columns):
+        time    1056927 non-null object
+        delay       1056927 non-null object
+
+总共1056926条数据，数据类型为object
+将time列数据类型转为datetime，同时将delay列转为int型
+        
+        tb['time'] = Column(tb['time']).to_datetime(errors='coerce')
+        tb = tb.dtype('int',['delay'])
+
+新建hour列，代表每个时间段（间隔1小时）的起始时间
+        
+        tb['hour'] = tb['time'].map(lambda t:t.hour)
+
+![](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/28649.jpg?raw=true)
+
+保存数据，便于后续分析
+        
+        tb.save('data.pkl')
+
+
+## 4数据分析
+### 问题1
+针对问题1，计算每个时间段的平均延迟，并进行排序
+
+        tb.groupby(by='hour').agg({'delay':'mean'}).sort_values(ascending=True)
+
+                   delay
+        hour            
+        9.0   145.404011
+        8.0   174.323472
+        15.0  178.745048
+        13.0  190.394015
+        16.0  195.633187
+        12.0  205.282659
+        7.0   207.589330
+        14.0  212.812898
+        19.0  221.870495
+        10.0  231.361168
+        11.0  248.143496
+        17.0  274.658666
+        6.0   275.404528
+        4.0   278.101013
+        20.0  299.666995
+        21.0  311.468117
+        18.0  326.338240
+        22.0  347.529785
+        5.0   375.986196
+        23.0  386.008496
+        0.0   541.010231
+        1.0   598.681771
+        3.0   667.059647
+        2.0   769.647361
+
+可以看到，延迟的谷点在上午9点左右，延迟较低的时间段主要集中在白天，符合一般规律
+延迟的峰点在凌晨2点左右，0点-4点延迟都处于高点
+
+        11.0    0.202289
+        6.0     0.217906
+        17.0    0.235705
+
+另外，这些饭点较网络空闲时段延迟明显偏高(侧面反映附近人群的饭点主要集中在:6点到7点，11点到12点，17点到18点)
+
+为了分析延迟的变化情况，按照时间顺序绘制折线图
+
+![各时间段延迟](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/40773.jpg?raw=true)
+
+可以看到，0点以后延迟有较大增长，在2点左右延迟达到高峰，随后迅速下降
+6点-9点延迟持续下降
+
+为方便进一步分析，计算延迟变化率
+
+        tb = tb.reset_index().sort_values(by='hour',ascending=True).set_index('hour').pct_change()
+
+![网络行为变化率](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/74496.jpg?raw=true)
+
+可以看到，变化率谷点在凌晨4点，结合常识和统计一般性推断，附近部分人群有在3点-4点入睡的习惯
+
+5点有一个小高峰，结合常识和统计一般性推断，附近部分人群有在5点-6点起床的习惯
+
+变化率峰点在上午10点左右，结合常识和统计一般性推断，附近部分人群有在10点居家上网的习惯
+
+对变化率取绝对值，这个指标在某种程度上反应用户的行为波动情况
+
+        tb['delay'] = abs(a['delay'])
+        tb.plot().show()
+
+![网络行为波动率](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/69508.jpg?raw=true)
+
+可以看到，最高峰值为凌晨4点和上午10点，在下午17点和晚上7点-9点有2个峰值，在凌晨2点有1个较明显的峰值，谷点在21点-22点左右
+
+另外，在12点和17点这两个饭点，波动率都有所提升
+
+或许是受上班影响，6点-9点波动率持续下降
+
+可以推断，附近部分人群在凌晨4点和上午10点最为活跃，所有人群在21点-22点左右最为稳定
+
+
+### 问题2
+针对问题2，对每个时间段的丢包次数进行统计，并计算丢包百分比
+
+        a = tb.groupby(by='hour').apply(lambda x:x['delay'].value_counts(normalize=True)[1000])\
+            .sort_values(ascending=True)
+
+        hour
+        9.0     0.088406
+        15.0    0.119429
+        8.0     0.121248
+        13.0    0.144711
+        7.0     0.155531
+        16.0    0.155686
+        12.0    0.159872
+        14.0    0.162106
+        10.0    0.173447
+        19.0    0.173877
+        11.0    0.202289
+        6.0     0.217906
+        17.0    0.235705
+        20.0    0.240915
+        4.0     0.252534
+        21.0    0.256912
+        18.0    0.285866
+        22.0    0.296263
+        5.0     0.332884
+        23.0    0.340050
+        0.0     0.515183
+        1.0     0.584680
+        3.0     0.623322
+        2.0     0.748577
+        dtype: float64
+
+可以观察到，丢包和延迟率的时间分布基本相同
+0点以后丢包率明显提升
+
+## 5总结
+1应该尽量选择在白天上网。其中，低延迟的最佳时间段是9点-10点，此时适合浏览网页、查询资料
+
+2强烈不建议开夜车
+
+3尽可能避开饭点：6点到7点，11点到12点，17点到18点
+
+## 6意外收获
+“0点”现象，邻居了解
+
+能不能筛选工作日和周末的数据，对附近的人群作进一步分析呢，请见下篇 wifi分析2[]
+
+
+
+
