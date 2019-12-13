@@ -46,30 +46,22 @@
 ### 问题1
 针对问题1，计算每个时间段的平均延迟，并进行排序
 
-        tb.groupby(by='hour').agg({'delay':'mean'}).sort_values(ascending=True)
+    tb.dtype('int',['delay']).group('hour').delay.mean().line()
 
 ![](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/38192.jpg?raw=true)
-
 
 可以看到，延迟的谷点在上午9点左右，延迟较低的时间段主要集中在白天，符合一般规律
 延迟的峰点在凌晨2点左右，0点-4点延迟都处于高点
 
-        11.0    0.202289
-        6.0     0.217906
-        17.0    0.235705
+另外，6点、11点、17点这些饭点较网络空闲时段延迟明显偏高(侧面反映附近人群的饭点主要集中在:6点到7点，11点到12点，17点到18点)
 
-另外，这些饭点较网络空闲时段延迟明显偏高(侧面反映附近人群的饭点主要集中在:6点到7点，11点到12点，17点到18点)
-
-为了分析延迟的变化情况，按照时间顺序绘制折线图
-
-![各时间段延迟](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/40773.jpg?raw=true)
-
-可以看到，0点以后延迟有较大增长，在2点左右延迟达到高峰，随后迅速下降
+总体趋势是，0点以后延迟有较大增长，在2点左右延迟达到高峰，随后迅速下降
 6点-9点延迟持续下降
 
 为方便进一步分析，计算延迟变化率
 
-        tb = tb.reset_index().sort_values(by='hour',ascending=True).set_index('hour').pct_change()
+    Table('gx2.pkl').dtype('int',['delay']).
+        group('hour').delay.mean().pct_change().line()
 
 ![网络行为变化率](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/74496.jpg?raw=true)
 
