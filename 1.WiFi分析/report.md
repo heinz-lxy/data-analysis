@@ -17,19 +17,13 @@
 ![ping_log文件概览+属性大小](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/22076.jpg?raw=true)
 
 ## 3数据处理
-加载数据
-        
-        names = ['time','url','ip1','empty','ip2','delay','ttl','status']
-        tb = Table(r'd:\data analysis\dataset\wifi\ping_log.csv',encoding='gbk',names = names )
-这里的Table类继承了pandas的DataFrame类，并封装了read_csv方法，见[excel.py](https://github.com/heinz-lxy/python-modules/blob/master/excel.py) 
-
 ![原始数据概览](http://q14cwxl8t.bkt.clouddn.com/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20191117154056.jpg?raw=true)
 
 去除无关列
 
        tb = tb.get('',['time','delay'])
 
-![去除无关列](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/70559.jpg?raw=true)
+![去除无关列](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/12873.jpg?raw=true)
 
 初步观察数据后发现，delay列中存在数据缺失，不难发现这是丢包情况产生的
 为了保持数据类型一致性，便于后续分析，将丢包情况下的延迟设为1000ms
@@ -190,8 +184,8 @@
 ## 6意外收获
 “0点”现象，邻居了解
 
-能不能筛选工作日和周末的数据，对附近的人群作进一步分析呢，请见下篇 wifi分析2[]
 
-
+后续：
+筛选工作日和周末
 
 
