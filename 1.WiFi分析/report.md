@@ -10,7 +10,7 @@
 
 ## 2数据来源
 这里使用的是一款PingInfoView的软件，能自动进行ping操作并日志记录，默认格式为csv
-记录时间范围为2019年9月12日-2019年11月18日，间隔为1s,文件总大小为164MB,共计1056926条数据
+记录时间范围为2019年9月12日-2019年11月18日，间隔为1s,文件总大小为164MB,共计1056926条数据(本人收集)
 ![PingInfoView](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/81179.jpg?raw=true)
 
 ## 3数据处理
@@ -90,8 +90,8 @@
 ### 问题2
 针对问题2，对每个时间段的丢包次数进行统计，并计算丢包百分比
 
-        a = tb.groupby(by='hour').apply(lambda x:x['delay'].value_counts(normalize=True)[1000])\
-            .sort_values(ascending=True)
+        tb.groupby(by='hour').apply(lambda x:x['delay'].value_counts(normalize=True)[1000])
+        .sort_values(ascending=True).bar()
 
 ![断线率](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/83710.jpg?raw=true)
 
@@ -105,11 +105,5 @@
 
 3尽可能避开饭点：6点到7点，11点到12点，17点到18点
 
-## 6意外收获
-“0点”现象，邻居了解
-
-
-后续：
-筛选工作日和周末
 
 
