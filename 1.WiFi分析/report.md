@@ -9,35 +9,27 @@
 2哪些时间段容易断网？
 
 ## 2数据来源
-![PingInfoView](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/81179.jpg?raw=true)
-
 这里使用的是一款PingInfoView的软件，能自动进行ping操作并日志记录，默认格式为csv
 记录时间范围为2019年9月12日-2019年11月18日，间隔为1s,文件总大小为164MB,共计1056926条数据
-
-![ping_log文件概览+属性大小](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/22076.jpg?raw=true)
+![PingInfoView](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/81179.jpg?raw=true)
 
 ## 3数据处理
-![原始数据概览](http://q14cwxl8t.bkt.clouddn.com/%E6%90%9C%E7%8B%97%E6%88%AA%E5%9B%BE20191117154056.jpg?raw=true)
+![原始数据概览](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/12873.jpg?raw=true)
+
+
+
 
 去除无关列
 
-       tb = tb.get('',['time','delay'])
-
-![去除无关列](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/12873.jpg?raw=true)
+       tb = tb.get[:,['time','delay']]
 
 初步观察数据后发现，delay列中存在数据缺失，不难发现这是丢包情况产生的
 为了保持数据类型一致性，便于后续分析，将丢包情况下的延迟设为1000ms
 
-        tb = tb.get('',['time','delay']).fillna(1000)
+        tb = tb.fill(1000)
 
-将初步处理的数据进行保存，便于后续分析
-        
-        tb.save('data.pkl')
 
-加载数据包
-        
-        tb = Table('data.pkl')
-        print(tb.info())
+        tb.info()
 
         RangeIndex: 1056927 entries, 0 to 1056926
         Data columns (total 2 columns):
@@ -45,21 +37,13 @@
         delay       1056927 non-null object
 
 总共1056926条数据，数据类型为object
-将time列数据类型转为datetime，同时将delay列转为int型
+将time列数据类型转为datetime，新建hour列，代表每个时间段（间隔1小时）的起始时间
         
-        tb['time'] = Column(tb['time']).to_datetime(errors='coerce')
-        tb = tb.dtype('int',['delay'])
-
-新建hour列，代表每个时间段（间隔1小时）的起始时间
-        
-        tb['hour'] = tb['time'].map(lambda t:t.hour)
+    tb.transform('datetime',
+        lambda dt_str:t.parse_time(dt_str,format='%Y/%m/%d %H:%M:%S'))
+        .transfer('hour','datetime',lambda dt:dt.hour)
 
 ![](https://github.com/heinz-lxy/data-analysis/blob/master/1.WiFi%E5%88%86%E6%9E%90/images/28649.jpg?raw=true)
-
-保存数据，便于后续分析
-        
-        tb.save('data.pkl')
-
 
 ## 4数据分析
 ### 问题1
