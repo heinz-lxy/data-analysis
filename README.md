@@ -1,4 +1,4 @@
-# data-analysis
+# data-analysis-cases
 
 
-# [数据分析个人项目集](https://heinz-lxy.github.io/data-analysis/index.html)
+# [个人数据分析案例集](https://heinz-lxy.github.io/data-analysis-cases/index.html)
